@@ -55,21 +55,6 @@ const createItemsCategoriesTable = {                                   //article
 };
 
 
-//  const addOneToOneRelationItemsTable = {
-//      name: 'alter-tables',
-//      text: `ALTER TABLE items_table
-//             ADD COLUMN fk_item_details_id INT UNIQUE,
-//             ADD CONSTRAINT fk_item_details_id FOREIGN KEY (fk_item_details_id) REFERENCES items_details_table(item_details_id) `,
-//  };
-
-//  const addoneToOneRelationDetailsTable = {
-//      name: 'alter-second-table',
-//      text: `ALTER TABLE items_details_table
-//             ADD COLUMN fk_item_name_id INT UNIQUE,
-//             ADD CONSTRAINT fk_item_name_id FOREIGN KEY (fk_item_name_id) REFERENCES items_table(item_name_id)`,
-//  };
-
-
 module.exports = {
     createSchema,
     createItemsTable,
