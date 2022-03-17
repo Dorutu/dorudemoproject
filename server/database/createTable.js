@@ -22,10 +22,11 @@ const createTables = async () => {
     pool.on('connect', (client) => {
         client.query(`SET search_path TO ${config.pgSchema}`);
     });
-     await pool.query(queries.createCategoryTable).then(res => "Category Table has been created");
-     console.log("executed");     
- //    await pool.query(queries.createSizeEnum).then(res => "Size type enum has been created");
+     await pool.query(queries.createSizeEnum).then(res => "Size type enum has been created");
+     console.log("executed-1");
      await pool.query(queries.createItemsTable).then(res => "Items Table has been created");
+     console.log("executed");     
+     await pool.query(queries.createCategoryTable).then(res => "Category Table has been created");
      console.log("executed2");  
      await pool.query(queries.createItemsCategoriesTable).then(res => "Items Categories table has been created");
      console.log("executed3");  
