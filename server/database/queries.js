@@ -1,137 +1,43 @@
+// SEARCHES
+'use-strict'
 
 
 const searchByLotNumber = {
     name: 'search-by-lot-number',
     text: `SELECT *
-           FROM items_details_table
-           WHERE LOWER(lot_number) LIKE '%'`,
+           FROM items_table i
+           INNER JOIN items_details_table id ON id.item_id = i.item_id
+           WHERE id.lot_number = $1`,
 };
 
 const searchBySerialNumber = {
     name: 'search-by-serial-number',
     text: `SELECT *
-           FROM items_datails_table
-           WHERE LOWER(serial_number) LIKE '%'`,
+           FROM items_table i
+           INNER JOIN items_details_table id ON id.item_id = i.item_id
+           WHERE id.serial_number = $1`,
 };
 
-const searchByItemName = {
+const searchByItemNameV1 = {
     name: 'search-by-item-name',
     text: `SELECT *
-           FROM items_table
-           WHERE LOWER(item_name) LIKE '%'`,
+           FROM items_table i
+           INNER JOIN items_details_table id ON id.item_id = i.item_id
+           WHERE LOWER(id.name) = LOWER($1)`,       
 };
 
 
-
-const getItem = {
-    name: 'get-item',
+const searchByItemNameV2 = {
+    name: 'search-by-item-name',
     text: `SELECT *
-           FROM items_table
-           WHERE item_name = $1`,
-};
-
-const updateItem = {
-    name: 'update-item',
-    text: `UPDATE items_table
-           SET item_name = $1
-               description = $2
-               price = $3
-               image_link = $4
-               material = $5
-               size = $6`,
-};
-
-const deleteItem = {
-    name: 'delete-item',
-    text: `DELETE FROM items_table
-           WHERE item_name = $1
-                 description = $2
-                 price = $3
-                 image_link = $4
-                 material = $5
-                 size = $6`,
-};
-
-const getCategory = {
-    name: 'get-category',
-    text: `SELECT *
-           FROM category_table
-           WHERE category_name = $1`,
-};
-
-const updateCategory = {
-    name: 'update-category',
-    text: `UPDATE category_table
-           SET category_name = $1
-               description = $2`,
-};
-
-const deleteCategory = {
-    name: 'delete-category',
-    text: `DELETE FROM category_table
-           WHERE category_name = $1
-                 description = $2`,
-};
-
-const createItemDetails = {
-    name: 'create-item-details',
-    text: `INSERT INTO items_details_table (serial_number, lot_number)
-           VALUES ($1, $2)`,
-};
-
-const getItemDetails = {
-    name: 'get-item-details',
-    text: `SELECT *
-           FROM items_details_table
-           WHERE item_details_id = $1`,
-};
-
-const updateItemDetails = {
-    name: 'update-item-details',
-    text: `UPDATE items_details_table
-           SET serial_number = $1
-               lot_number = $2`,
-};
-
-const deleteItemDetails = {
-    name: 'delete-item-details',
-    text: `DELETE FROM items_details_table
-           WHERE serial_number = $1
-                 lot_number = $2`,
+           FROM items_table i
+           INNER JOIN items_details_table id ON id.item_id = i.item_id
+           WHERE id.name ILIKE $1`,       
 };
 
 
 
-
-
-
-const createItem = {
-    name: 'create-item',
-    text: `INSERT INTO items_table (item_name, description, price, image_link, material, size)
-           VALUES ($1, $2, $3, $4, $5, $6)`,
-};
-
-
-const createCategory = {
-    name: 'create-category',
-    text: `INSERT INTO category_table(category_name, description)
-        VALUES($1, $2)`
-};
-
-
-const insertItemCateogry = {
-    name: 'insert-items-categories',
-    text: `INSERT INTO item_categories(item_id, category_id)
-          VALUES($1, $2)`
-};
-
-    
-const createItemsDetails = {
-    name: 'create-items-details',
-    text: `INSERT INTO items_details_table(serial_number, lot_number)
-            VALUES($1, $2)`
-};
-
+// Get all
 
 const getAllItems = {
     name: 'get-all-items',
@@ -154,28 +60,84 @@ const getAllDetails = {
 };
 
 
-const getLotNumber = {
-    name: 'get-lot-number',
-    text: `SELECT *
-           FROM items_details_table
-           WHERE lot_number = $1`
+// CRUD
+
+// create
+
+const insertItemsTable = {
+    name: 'create-item',
+    text: `INSERT INTO items_table (name, description, price, image_link, material, size)
+           VALUES ($1, $2, $3, $4, $5, $6)`,
 };
 
-const getSerialNumber = {
-    name: 'get-serial-number',
-    text: `SELECT *
-           FROM items_details_table
-           WHERE serial_number = $1`
+const insertCategoriesTable = {
+    name: 'create-category',
+    text: `INSERT INTO category_table(name, description)
+        VALUES($1, $2)`
 };
 
-const searchItem = {
-    name: 'search-item',
+const insertItemsDetailsTable = {
+    name: 'create-items-details',
+    text: `INSERT INTO items_details_table(item_id, serial_number, lot_number)
+            VALUES($1, $2, $3)`,
+};
+
+const insertItemCateogry = {
+    name: 'insert-items-categories',
+    text: `INSERT INTO item_categories(item_id, category_id)
+          VALUES($1, $2)`,
+};
+
+
+// read
+
+
+const getItem = {
+    name: 'get-item',
     text: `SELECT *
            FROM items_table
-           WHERE lower(item_name) = LOWER($1)`,
-}
+           WHERE id = $1`,
+};
 
-const updateItemById = {
+const getCategory = {
+    name: 'get-category',
+    text: `SELECT *
+           FROM category_table
+           WHERE category_name = $1`,
+};
+
+const getItemDetailsByItemId = {
+    name: 'get-item-details',
+    text: `SELECT *
+           FROM items_details_table
+           WHERE item_id = $1`,
+};
+
+
+// Update
+
+
+
+const updateCategory = {
+    name: 'update-category-by-id',
+    text: `UPDATE category_table
+           SET category_name = $1
+               description = $2
+           WHERE category_id = $3`,
+};
+
+
+
+const updateItemDetails ={
+    name: 'update-item-details-by-id',
+    text: `UPDATE items_details_table
+           SET serial_number = $1
+               lot_number = $2
+            WHERE item_id = $3`,
+
+};
+
+const updateItem = {
     name: 'update-item-by-id',
     text: `UPDATE items_table
            SET item_name = $1
@@ -188,72 +150,63 @@ const updateItemById = {
            
 };
 
-const updateCategoryById = {
-    name: 'update-category-by-id',
-    text: `UPDATE category_table
-           SET category_name = $1
-               description = $2
-           WHERE category_id = $3`,
-};
-
-const updateItemDetailsById ={
-    name: 'update-item-details-by-id',
-    text: `UPDATE items_details_table
-           SET serial_number = $1
-               lot_number = $2
-            WHERE item_id = $3`,
-
-};
-
-const deleteItemById = {
+// delete
+const deleteItem = {
     name: 'deleteItembyId',
-    text: `DELETE FROM items_talbe
-           WHERE item_id = $1`,
-};
-
-//delele categorie fara sa atingi items
-
-const deleteCategoryById = {
-    name: 'delete-category-by-id',
-    text: `DELETE FROM item_categories
-           WHERE category_id = $1`,
-};
-
-//permit unasign item si categorie
-const unasignItem = {
-    name: 'unasign-item',
     text: `DELETE FROM items_table
            WHERE item_id = $1`,
 };
 
-const unasignCategory = {
-    name: 'unasign-category',
-    text: `DELETE FROM category_table
-            WHERE id = $1`,
+const deleteCategory = {
+    name: 'delete-category',
+    text: `DELETE 
+           FROM category_table
+           WHERE category_id = $1`,
 };
 
 
 
+const deleteItemDetails = {
+    name: 'delete-item-details',
+    text: `DELETE FROM items_details_table
+           WHERE item_id = $1
+                 serial_number = $2
+                 lot_number = $3`,
+};
+
+
+
+const updateCategoryAssigned = {
+    name: 'update-category-assigned',
+    text: `UPDATE item_categories
+           SET category_id = $1
+           WHERE item_id = $2
+                 category_id = $3,`
+};
+
+
+
+
 module.exports = {
-    getAllItems,
-    getAllCategories,
     searchByLotNumber,
     searchBySerialNumber,
-    searchByItemName,
-    createItem,
+    searchByItemNameV1,
+    searchByItemNameV2,
+    getAllItems,
+    getAllCategories,
+    getAllDetails,
+    insertItemsTable,
+    insertCategoriesTable,
+    insertItemsDetailsTable,
     getItem,
+    getCategory,
+    getItemDetailsByItemId,
+    updateCategory,
+    updateItemDetails,
     updateItem,
     deleteItem,
-    createCategory,
-    getCategory,
-    updateCategory,
     deleteCategory,
-    createItemDetails,
-    getItemDetails,
-    updateItemDetails,
     deleteItemDetails,
-    AddDetailsData,
-    AddCategoryData,
-    addItems,
-    updateItemCategory,
+    insertItemCateogry,
+    updateCategoryAssigned,
 };
