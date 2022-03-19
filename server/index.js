@@ -6,8 +6,6 @@ const db = require('../server/database/database');
 
 const app = express();
 
-
-
 //middleware
 app.use(cors());
 app.use(express.json());
@@ -16,8 +14,6 @@ app.use(express.json());
     db.on('connect', (client) => {
         client.query(`SET search_path TO ${config.pgSchema}`);
     });
-
-
 
     app.get('/getAllCategories', async (req, res) => {
         try {
